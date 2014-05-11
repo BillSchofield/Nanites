@@ -42,6 +42,7 @@ Physics(function(world){
     }));
 
     // add a circle
+
     var circle = Physics.body('circle', {
         x: 50, // x-coordinate
         y: 30, // y-coordinate
@@ -53,6 +54,10 @@ Physics(function(world){
     var fighter = nanites.fighter({physics: circle});
 
     world.add(circle);
+
+    var result = world.findOne({$at: Physics.vector(50, 50)})
+
+
 
     // ensure objects bounce when edge collision is detected
     world.add( Physics.behavior('body-impulse-response') );

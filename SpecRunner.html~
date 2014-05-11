@@ -14,12 +14,18 @@
   <script type="text/javascript" src="js/vendor/physicsjs-0.6.0/physicsjs-full-0.6.0.js"></script>
 
   <!-- include source files here... -->
+<<<<<<< HEAD
   <script type="text/javascript" src="js/src/Fighter.js"></script>
-  <script src="js/src/Spawner.js"></script>
 
   <!-- include spec files here... -->
   <script type="text/javascript" src="js/spec/FighterSpec.js"></script>
+
+=======
+  <script src="js/src/Spawner.js"></script>
+
+  <!-- include spec files here... -->
   <script src="js/spec/SpawnerSpec.js"></script>
+>>>>>>> Modified spawner update method
 
 </head>
 
