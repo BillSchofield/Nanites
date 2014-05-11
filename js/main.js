@@ -1,3 +1,7 @@
+"use strict";
+
+var nanites = nanites || {};
+
 Physics(function(world){
 
     var viewWidth = 500;
@@ -38,21 +42,24 @@ Physics(function(world){
     }));
 
     // add a circle
-    world.add(
-        Physics.body('circle', {
-            x: 50, // x-coordinate
-            y: 30, // y-coordinate
-            vx: 0.2, // velocity in x-direction
-            vy: 0.01, // velocity in y-direction
-            radius: 20
-        })
-    );
+    var circle = Physics.body('circle', {
+        x: 50, // x-coordinate
+        y: 30, // y-coordinate
+        vx: 0.2, // velocity in x-direction
+        vy: 0.01, // velocity in y-direction
+        radius: 20
+    });
+
+    var fighter = nanites.fighter({physics: circle});
+
+    world.add(circle);
 
     // ensure objects bounce when edge collision is detected
     world.add( Physics.behavior('body-impulse-response') );
 
     // subscribe to ticker to advance the simulation
     Physics.util.ticker.on(function( time, dt ){
+        fighter.update();
         world.step( time );
     });
 
