@@ -7,7 +7,7 @@ nanites.fighter = function(spec){
 
     var physics = spec.physics;
 
-    that.update = function() {
+    that.updateUnit = function() {
         physics.accelerate(Physics.vector(1, 1));
     };
 

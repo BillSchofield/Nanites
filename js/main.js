@@ -2,18 +2,25 @@
 
 var nanites = nanites || {};
 
-Physics(function(world){
 
-    var viewWidth = 500;
-    var viewHeight = 300;
+nanites.random = function(min,max){
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
+
+Physics({
+        timestep: 1000.0 / 160
+},
+    function(world){
+
+    var viewWidth = 900;
+    var viewHeight = 600;
 
     var renderer = Physics.renderer('canvas', {
         el: "playfield",
         width: viewWidth,
         height: viewHeight,
-        meta: false, // don't display meta data
+        meta: false,
         styles: {
-            // set colors for the circle bodies
             'circle' : {
                 strokeStyle: 'black',
                 lineWidth: 1,
@@ -23,52 +30,33 @@ Physics(function(world){
         }
     });
 
-    // add the renderer
     world.add( renderer );
 
-    // render on each step
     world.on('step', function(){
         world.render();
     });
 
-    // bounds of the window
-    var viewportBounds = Physics.aabb(0, 0, viewWidth, viewHeight);
+    var worldBounds = Physics.aabb(0, 0, viewWidth, viewHeight);
 
-    // constrain objects to these bounds
     world.add(Physics.behavior('edge-collision-detection', {
-        aabb: viewportBounds,
-        restitution: 0.99,
-        cof: 0.99
+        aabb: worldBounds
     }));
 
-    // add a circle
+    var units = [];
+    var unitFactory = nanites.builderFactory({world: world, units: units, worldBounds: worldBounds});
+    units.push(unitFactory.createUnit(Physics.vector(350, 350)));
 
-    var circle = Physics.body('circle', {
-        x: 50, // x-coordinate
-        y: 30, // y-coordinate
-        vx: 0.2, // velocity in x-direction
-        vy: 0.01, // velocity in y-direction
-        radius: 20
-    });
-
-    var fighter = nanites.fighter({physics: circle});
-
-    world.add(circle);
-
-    var result = world.findOne({$at: Physics.vector(50, 50)})
-
-
-
-    // ensure objects bounce when edge collision is detected
     world.add( Physics.behavior('body-impulse-response') );
+//    world.add( Physics.behavior('body-collision-detection') );
 
-    // subscribe to ticker to advance the simulation
-    Physics.util.ticker.on(function( time, dt ){
-        fighter.update();
+        Physics.util.ticker.on(function( time, dt ){
+        units.forEach(function(unit){
+            unit.updateUnit();
+        });
+        document.getElementById("units").innerHTML = units.length.toString();
         world.step( time );
     });
 
-    // start the ticker
     Physics.util.ticker.start();
 
 });
