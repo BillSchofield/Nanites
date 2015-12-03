@@ -13,15 +13,31 @@ nanites.builder = function(spec) {
     var ticksBetweenSpawns = 50;
     var ticksUntilNextSpawn = ticksBetweenSpawns;
 
+    function isRoomForNewUnit(newPosition) {
+        var radius = 30;
+        var isSpotOccupied =
+                world.findOne({$at: newPosition}) ||
+                world.findOne({$at: Physics.vector(0, radius).vadd(newPosition)}) ||
+                world.findOne({$at: Physics.vector(0, -radius).vadd(newPosition)}) ||
+                world.findOne({$at: Physics.vector(radius, 0).vadd(newPosition)}) ||
+                world.findOne({$at: Physics.vector(-radius, 0).vadd(newPosition)});
+
+        var fitsInsideWorld = Physics.aabb.contains(worldBounds, Physics.body("circle", {
+            x: newPosition.x,
+            y: newPosition.y,
+            radius: radius
+        }).aabb());
+
+        return !isSpotOccupied && fitsInsideWorld;
+    }
+
     that.updateUnit = function(){
-        body.state.vel = Physics.vector(0, 0);
         if (ticksUntilNextSpawn-- < 0){
             var index = nanites.random(0, offsets.length - 1)
             var offset = offsets[index];
             var newPosition = body.state.pos.clone();
             newPosition.vadd(offset);
-            var findOne = world.findOne({$at: newPosition});
-            if (!findOne && Physics.aabb.contains(worldBounds, newPosition)){
+            if (isRoomForNewUnit(newPosition)){
                 unitFactory.createUnit(newPosition);
             }
             ticksUntilNextSpawn = ticksBetweenSpawns;

@@ -47,7 +47,8 @@ Physics({
     units.push(unitFactory.createUnit(Physics.vector(350, 350)));
 
     world.add( Physics.behavior('body-impulse-response') );
-//    world.add( Physics.behavior('body-collision-detection') );
+    world.add( Physics.behavior('body-collision-detection') );
+    world.add( Physics.behavior('sweep-prune') );
 
         Physics.util.ticker.on(function( time, dt ){
         units.forEach(function(unit){

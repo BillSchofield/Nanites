@@ -13,15 +13,12 @@ nanites.builderFactory = function(spec) {
         var spec = {
             x: position.x,
             y: position.y,
-            vx: 0,
-            vy: 0,
-            radius: 20,
-            fixed: true
+            radius: 20
         };
         var circle = Physics.body("circle", spec);
         world.add(circle);
 
-        var baseOffset = 40;
+        var baseOffset = 35;
         var spec = {
             builderFactory: that,
             offsets: [
